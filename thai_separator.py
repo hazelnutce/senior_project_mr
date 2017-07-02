@@ -1,6 +1,7 @@
 
 from pythainlp.tokenize import word_tokenize
 from pythainlp.rank import rank
+from pythainlp.corpus import stopwords
 from pythainlp.tag import pos_tag
 from pythainlp.corpus import wordnet
 import io
@@ -15,6 +16,7 @@ word_all_mix = []
 #keep word that must delete in this set of array
 word_preposition = []
 double_char = []
+stopwords = stopwords.words('thai')
 
 with io.open('data.txt','r',encoding='utf8') as f:
     text = f.read()
@@ -66,6 +68,18 @@ print("length of list word_all_eng is ",len(word_all_eng))
 print("length of list word_all_mix is ",len(word_all_mix))
 
 #print(pos_tag(word_all_thai,engine='old'))
+for word in word_all_thai:
+    if(word in stopwords):
+        word_all_thai.remove(word)
+
+for word in word_all_thai:
+    if(word in stopwords):
+        word_all_thai.remove(word)
+
+for word in word_all_thai:
+    if(word in stopwords):
+        word_all_thai.remove(word)
+# 'ตัวหนัง': 12, 'ภาพยนตร์': 11, 'ใคร': 11, 'บท': 11, 'บอก': 11, 'ตัวละคร': 11
 for word in word_all_thai:
     if(word in word_preposition):
         word_all_thai.remove(word)
