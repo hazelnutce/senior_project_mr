@@ -46,7 +46,7 @@ for line in text.split('\n'):
     sentences.append(sentence)
 
 #save document in pickle form
-save_documents = open("pickled_algos/documents.pickle","wb")
+save_documents = open("pickled_polarity/documents.pickle","wb")
 pickle.dump(documents, save_documents)
 save_documents.close()
 
@@ -182,7 +182,7 @@ testing_set = featuresets[20:]
 # classifier.show_most_informative_features(15)
 #
 # ###############
-# save_classifier = open("pickled_algos/naivebayes.pickle","wb")
+# save_classifier = open("pickled_polarity/naivebayes.pickle","wb")
 # pickle.dump(classifier, save_classifier)
 # save_classifier.close()
 
