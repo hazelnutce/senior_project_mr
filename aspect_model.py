@@ -21,6 +21,8 @@ def seperator(text):
     aspect = []
     word_in_text = word_tokenize(text, engine="mm")
     for word in word_in_text:
+        if("NOT_" in word):
+            word = word[4:]
         for aspect_word in aspect_sound_word:
             if(word == aspect_word):
                 aspect.append('sound');
