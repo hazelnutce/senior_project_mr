@@ -14,28 +14,32 @@ import pickle
 import os
 import json
 import operator
-
+######################################################
+########select adjective list from pantip#############
+######################################################
 
 #keep separated word in this set of array
-sentences = []
-documents = []
+sentences = [] #for each line
+documents = [] #for each topic
+
 word_all = []
 word_all_eng = []
 word_all_thai_unfiltered = []
 word_all_thai_filtered = []
 word_all_mix = []
-positive_adjective = []
-negative_adjective = []
+
 adjective_word = []
 adjective_word_by_pos_tagging = []
 
-#global variable
-dirName = 'document/pantip_data/'
 
 #keep word that must delete in this set of array
 word_preposition = []
 double_char = []
+positive_adjective = []
+negative_adjective = []
 stopwords = stopwords.words('thai')
+
+dirName = 'document/pantip_data/'
 
 for fileName in os.listdir(dirName):
     data = json.loads(open(dirName+fileName,encoding="utf8").read())
@@ -46,41 +50,18 @@ for document in documents:
         if(line != ""):
             sentences.append(line)
 
-# #save document in pickle form
-# save_documents = open("pickled_polarity/documents.pickle","wb")
-# pickle.dump(documents, save_documents)
-# save_documents.close()
+def convertFileToList(pathName,appendingList):
+    with io.open(pathName,'r',encoding='utf8') as f:
+        text = f.read()
 
-#convert preposition word from data file to list
-with io.open('document/preposition.txt','r',encoding='utf8') as f:
-    text = f.read()
+    for word in text.split('\n'):
+        appendingList.append(word)
 
-for word_prep in text.split('\n'):
-    word_preposition.append(word_prep)
+convertFileToList('document/general_data/preposition.txt',word_preposition)
+convertFileToList('document/general_data/double_char.txt',double_char)
+convertFileToList('document/general_data/negative_adjective.txt',negative_adjective)
+convertFileToList('document/general_data/positive_adjective.txt',positive_adjective)
 
-#convert double char word from data file to list
-with io.open('document/double_char.txt','r',encoding='utf8') as f:
-    text = f.read()
-
-for dchar in text.split('\n'):
-    double_char.append(dchar)
-
-with io.open('document/negative_adjective.txt','r',encoding='utf8') as f:
-    text = f.read()
-
-for word_neg_adj in text.split('\n'):
-    negative_adjective.append(word_neg_adj)
-
-with io.open('document/positive_adjective.txt','r',encoding='utf8') as f:
-    text = f.read()
-
-for word_pos_adj in text.split('\n'):
-    positive_adjective.append(word_pos_adj)
-
-#print(document)
-#mm can separate all in any sentence any form
-#dict can't separate english and whitespace because
-#it depend on thaidict in corpus
 for text in sentences:
     word_in_text = word_tokenize(text,engine="mm")
     for word in word_in_text:
@@ -99,15 +80,13 @@ for text in sentences:
          else:
              word_all_mix.append(word)
 
-# print("length of list word_all is ",len(word_all))
-# print("length of list word_all_thai is ", len(word_all_thai_unfiltered))
-# print("length of list word_all_eng is ",len(word_all_eng))
-# print("length of list word_all_mix is ",len(word_all_mix))
-
 #print(pos_tag(word_all_thai,engine='old'))
-for word in word_all_thai_unfiltered:
-    if(word not in stopwords and (word not in word_preposition) and (word not in double_char) and (len(word) > 1)):
-        word_all_thai_filtered.append(word)
+def preprocessingByList(beforeList,afterList):
+    for word in beforeList:
+        if (word not in stopwords and (word not in word_preposition) and (word not in double_char) and (len(word) > 1)):
+            afterList.append(word)
+
+preprocessingByList(word_all_thai_unfiltered,word_all_thai_filtered)
 
 for word in word_all_thai_unfiltered:
     if(word in negative_adjective or word in positive_adjective):
@@ -118,9 +97,13 @@ print(rank(word_all_thai_unfiltered))
 print(rank(word_all_thai_filtered))
 item = rank(word_all_thai_filtered)
 
-with open('document/data.json','w',encoding="utf-8") as fp:
+with open('document/general_data/data.json','w',encoding="utf-8") as fp:
     json.dump(item,fp,indent=4,ensure_ascii=False,sort_keys=True)
-    # json.dump(rank(word_all_thai_filtered),fp,indent=4,ensure_ascii=False,sort_keys=True)
+    json.dump(rank(word_all_thai_filtered),fp,indent=4,ensure_ascii=False,sort_keys=True)
+
+######################################################
+########use adjective list for polarity train#########
+######################################################
 
 # pos tagger part
 # for (word,tag) in pos_tag(word_all_thai_filtered,engine="old"):
