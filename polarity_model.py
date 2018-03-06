@@ -59,8 +59,8 @@ def find_features(document):
         if(w in words):
             count += 1
         features[w] = (w in words)
-    print(count)
-    print(words)
+    # print(count)
+    # print(words)
     return features
 
 featuresets_f = open("pickled_polarity/FeatureSet.pickle", "rb")
@@ -106,8 +106,8 @@ voted_classifier = VoteClassifier(
                                   NuSVC_classifier,
                                   SGDC_classifier)
 
-def sentiment(text):
+def sentimentSeparator(text):
     feats = find_features(text)
     return voted_classifier.classify(feats),voted_classifier.confidence(feats)
 
-print(sentiment('ผมแนะนำว่าอย่าไปดูเลยครับพากย์ไทย ดูซาวแทรคดีกว่า'))
+print(sentimentSeparator('หนังสนุกมากๆครับผมแนะนำ'))

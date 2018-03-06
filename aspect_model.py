@@ -17,7 +17,7 @@ open_file = open("pickled_aspect/aspect_graphic.pickle", "rb")
 aspect_graphic_word = pickle.load(open_file)
 open_file.close()
 
-def seperator(text):
+def aspectSeparator(text):
     aspect = []
     word_in_text = word_tokenize(text, engine="mm")
     for word in word_in_text:
@@ -41,8 +41,8 @@ def seperator(text):
                 break;
     return set(aspect)
 
-print(seperator("นักแสดงแสดงได้ดีมาก โดยเฉพาะนางเอก"))
-print(seperator("ภาพยนตร์เรื่องนี้น่าไปดูมาก แนะนำเลยครับ"))
-print(seperator("พล็อตเรื่องแสดงความเป็นเอกลักษณ์ของค่ายนี้ได้เหมือนเดิม"))
-print(seperator("ผิดหวังในภาพยนตร์เรื่องนี้มาก อย่าไปดูเลยครับ ไม่ไหวจริงๆ"))
-print(seperator("แต่บทหนังกลับดูง่ายและธรรมดาไปมาก"))
+print(aspectSeparator("นักแสดงแสดงได้ดีมาก โดยเฉพาะนางเอก"))
+print(aspectSeparator("ภาพยนตร์เรื่องนี้น่าไปดูมาก แนะนำเลยครับ"))
+print(aspectSeparator("พล็อตเรื่องแสดงความเป็นเอกลักษณ์ของค่ายนี้ได้เหมือนเดิม"))
+print(aspectSeparator("ผิดหวังในภาพยนตร์เรื่องนี้มาก อย่าไปดูเลยครับ ไม่ไหวจริงๆ"))
+print(aspectSeparator("แต่บทหนังกลับดูง่ายและธรรมดาไปมาก"))
