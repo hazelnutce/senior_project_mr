@@ -41,7 +41,7 @@ def aspectSeparator(text):
                 break;
     return set(aspect)
 
-# print(aspectSeparator("นักแสดงแสดงได้ดีมาก โดยเฉพาะนางเอก"))
+# print(aspectSeparator("หนังสนุกมากๆครับ ผมโคตรชอบเลย"))
 # print(aspectSeparator("ภาพยนตร์เรื่องนี้น่าไปดูมาก แนะนำเลยครับ"))
 # print(aspectSeparator("พล็อตเรื่องแสดงความเป็นเอกลักษณ์ของค่ายนี้ได้เหมือนเดิม"))
 # print(aspectSeparator("ผิดหวังในภาพยนตร์เรื่องนี้มาก อย่าไปดูเลยครับ ไม่ไหวจริงๆ"))

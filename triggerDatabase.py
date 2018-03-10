@@ -40,28 +40,34 @@ for movieKey,movieValue in data.items():
                 elif aspect == 'graphic':
                     countComment[1] += 1
                     if sentimentAns == 'pos' and probAns > 0.7:
-                        countPosComment[0] += 1
+                        countPosComment[1] += 1
                     elif sentimentAns == 'neg' and probAns > 0.7:
-                        countNegComment[0] += 1
+                        countNegComment[1] += 1
                 elif aspect == 'sound':
                     countComment[2] += 1
                     if sentimentAns == 'pos' and probAns > 0.7:
-                        countPosComment[0] += 1
+                        countPosComment[2] += 1
                     elif sentimentAns == 'neg' and probAns > 0.7:
-                        countNegComment[0] += 1
+                        countNegComment[2] += 1
                 elif aspect == 'actor':
                     countComment[3] += 1
                     if sentimentAns == 'pos' and probAns > 0.7:
-                        countPosComment[0] += 1
+                        countPosComment[3] += 1
                     elif sentimentAns == 'neg' and probAns > 0.7:
-                        countNegComment[0] += 1
+                        countNegComment[3] += 1
+        countIndex = 0
         for c,d,e,f in zip(countComment,countPosComment,countNegComment,score):
             if c > 25:
                 f = f + d * 1.0 / c * 5.0 - e * 1.0 / c * 5.0
             else:
-                f = f + d * 0.25 - e * 0.25
-                print(c, d, e, f)
-
+                f = f + d * 0.2 - e * 0.2
+            score[countIndex] = f
+            countIndex += 1
+        scoreDict['genericScore'] = score[0]
+        scoreDict['graphicScore'] = score[1]
+        scoreDict['soundScore'] = score[2]
+        scoreDict['actorScore'] = score[3]
+        new_score = root.child('movies/'+movieKey).update(scoreDict)
             # print(countPosComment)
             # print(countNegComment)
     except KeyError:
