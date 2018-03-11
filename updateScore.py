@@ -13,6 +13,7 @@ data = db.reference('movies').get()
 root = db.reference()
 movieData = []
 
+#update score
 for movieKey,movieValue in data.items():
     scoreDict = {
         'soundScore' : 5,
