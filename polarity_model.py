@@ -110,4 +110,4 @@ def sentimentSeparator(text):
     feats = find_features(text)
     return voted_classifier.classify(feats),voted_classifier.confidence(feats)
 
-# print(sentimentSeparator('หนังสนุกมากๆครับผมแนะนำ'))
+# print(sentimentSeparator('ไปดูมาก็สนุกดี แต่เอฟเฟ็คตอนเปิดเรื่องหลอกตาไปหน่อย ที่เหลือโอเค ยิงกันมันดี'))

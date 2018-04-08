@@ -26,6 +26,7 @@ documents = []
 featureWord = []
 general_data = "general_data\\data.json"
 adjective_data = "adjective_list.json"
+featureSize = 529
 
 data = json.loads(open(dirName+adjective_data,encoding="utf8").read())
 for key in data:
@@ -81,8 +82,6 @@ random.shuffle(featuresets)
 save_featuresets = open("pickled_polarity/FeatureSet.pickle","wb")
 pickle.dump(featuresets,save_featuresets)
 save_featuresets.close()
-
-featureSize = 100
 
 def tenFoldValidation():
     accNaiveBayes = []
@@ -143,8 +142,8 @@ def tenFoldValidation():
     print("SGDC ",np.mean(accSGDC))
     print("NuSVC ",np.mean(accNuSVC))
 
-training_set = featuresets[:75]
-testing_set = featuresets[75:]
+training_set = featuresets[:400]
+testing_set = featuresets[400:]
 
 classifier = nltk.NaiveBayesClassifier.train(training_set)
 print("Original Naive Bayes Algo accuracy percent:", (nltk.classify.accuracy(classifier, testing_set))*100)
