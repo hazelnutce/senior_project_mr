@@ -26,13 +26,10 @@ documents = []
 featureWord = []
 general_data = "general_data\\data.json"
 adjective_data = "adjective_list.json"
-featureSize = 529
 
 data = json.loads(open(dirName+adjective_data,encoding="utf8").read())
 for key in data:
     featureWord.append(key)
-
-print(len(featureWord))
 
 save_featureword = open("pickled_polarity/WordFeature.pickle","wb")
 pickle.dump(featureWord,save_featureword)
@@ -46,8 +43,12 @@ for fileName in os.listdir(documentDirNameNeg):
     data = json.loads(open(documentDirNameNeg + fileName, encoding="utf8").read())
     documents.append((data["text"],"neg"))
 
+featureSize = len(documents)
+print(featureSize)
+
 def find_features(document):
-    words = word_tokenize(document,engine="mm")
+    words = word_tokenize(document,engine="newmm")
+    words = [x for x in words if x != ""]
     willRemoveList = []
     # 4-grams
     for i in range(0, len(words) - 3):
@@ -83,67 +84,9 @@ save_featuresets = open("pickled_polarity/FeatureSet.pickle","wb")
 pickle.dump(featuresets,save_featuresets)
 save_featuresets.close()
 
-def tenFoldValidation():
-    accNaiveBayes = []
-    accMNB = []
-    accBernoulliNB = []
-    accLogisticRegression = []
-    accLinearSVC = []
-    accSGDC = []
-    accNuSVC = []
-    for i in range(0,10):
-        testing_set = featuresets[int(featureSize/10*i):int(featureSize/10*(i+1))]
-        training_set = featuresets[0:int(featureSize/10*i)]
-        training_set.extend(featuresets[int(featureSize/10*(i+1)):featureSize])
-        classifier = nltk.NaiveBayesClassifier.train(training_set)
-        print("Original Naive Bayes Algo accuracy percent:", (nltk.classify.accuracy(classifier, testing_set)) * 100)
-        accNaiveBayes.append((nltk.classify.accuracy(classifier, testing_set)) * 100)
-
-        MNB_classifier = SklearnClassifier(MultinomialNB())
-        MNB_classifier.train(training_set)
-        print("MNB_classifier accuracy percent:", (nltk.classify.accuracy(MNB_classifier, testing_set)) * 100)
-        accMNB.append((nltk.classify.accuracy(MNB_classifier, testing_set)) * 100)
-
-        BernoulliNB_classifier = SklearnClassifier(BernoulliNB())
-        BernoulliNB_classifier.train(training_set)
-        print("BernoulliNB_classifier accuracy percent:",
-              (nltk.classify.accuracy(BernoulliNB_classifier, testing_set)) * 100)
-        accBernoulliNB.append((nltk.classify.accuracy(BernoulliNB_classifier, testing_set)) * 100)
-
-        LogisticRegression_classifier = SklearnClassifier(LogisticRegression())
-        LogisticRegression_classifier.train(training_set)
-        print("LogisticRegression_classifier accuracy percent:",
-              (nltk.classify.accuracy(LogisticRegression_classifier, testing_set)) * 100)
-        accLogisticRegression.append((nltk.classify.accuracy(LogisticRegression_classifier, testing_set)) * 100)
-
-        LinearSVC_classifier = SklearnClassifier(LinearSVC())
-        LinearSVC_classifier.train(training_set)
-        print("LinearSVC_classifier accuracy percent:",
-              (nltk.classify.accuracy(LinearSVC_classifier, testing_set)) * 100)
-        accLinearSVC.append((nltk.classify.accuracy(LinearSVC_classifier, testing_set)) * 100)
-
-        SGDC_classifier = SklearnClassifier(SGDClassifier(max_iter=1000))
-        SGDC_classifier.train(training_set)
-        print("SGDClassifier accuracy percent:", nltk.classify.accuracy(SGDC_classifier, testing_set) * 100)
-        accSGDC.append(nltk.classify.accuracy(SGDC_classifier, testing_set) * 100)
-
-        NuSVC_classifier = SklearnClassifier(NuSVC())
-        NuSVC_classifier.train(training_set)
-        print("NuSVC_classifier accuracy percent:", (nltk.classify.accuracy(NuSVC_classifier, testing_set)) * 100)
-        accNuSVC.append((nltk.classify.accuracy(NuSVC_classifier, testing_set)) * 100)
-
-        print("-----------------------------------------")
-    print("average accuracy")
-    print("Naive Bayes ",np.mean(accNaiveBayes))
-    print("MNB ",np.mean(accMNB))
-    print("BernoulliNB ",np.mean(accBernoulliNB))
-    print("LogisticRegression ",np.mean(accLogisticRegression))
-    print("LinearSVC ",np.mean(accLinearSVC))
-    print("SGDC ",np.mean(accSGDC))
-    print("NuSVC ",np.mean(accNuSVC))
-
-training_set = featuresets[:400]
-testing_set = featuresets[400:]
+trainLength = int(featureSize * 0.8)
+training_set = featuresets[:trainLength]
+testing_set = featuresets[trainLength:]
 
 classifier = nltk.NaiveBayesClassifier.train(training_set)
 print("Original Naive Bayes Algo accuracy percent:", (nltk.classify.accuracy(classifier, testing_set))*100)

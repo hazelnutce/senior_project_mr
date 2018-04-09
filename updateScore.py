@@ -105,6 +105,7 @@ while (True):
         preSum = sum
         print("Calculating ",sum,"comments",strftime("%Y-%m-%d %H:%M:%S", gmtime()))
         calculateNewScore(data,root)
+        print("Calculation complete ", strftime("%Y-%m-%d %H:%M:%S", gmtime()))
     else:
         preSum = sum
         print("Nothing Change", strftime("%Y-%m-%d %H:%M:%S", gmtime()))
