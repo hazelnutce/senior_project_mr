@@ -39,6 +39,12 @@ def find_features(document):
     print(words)
     features = {}
     willRemoveList = []
+    # 5-grams
+    for i in range(0, len(words) - 4):
+        if (words[i] + words[i + 1] + words[i + 2] + words[i + 3] + words[i + 4] in featureWord):
+            words.append(words[i] + words[i + 1] + words[i + 2] + words[i + 3] + words[i + 4])
+            willRemoveList.extend([words[i], words[i + 1], words[i + 2], words[i + 3], words[i + 4]])
+
     # 4-grams
     for i in range(0, len(words) - 3):
         if (words[i] + words[i + 1] + words[i + 2] + words[i + 3] in featureWord):
@@ -114,4 +120,4 @@ def sentimentSeparator(text):
     feats = find_features(text)
     return voted_classifier.classify(feats),voted_classifier.confidence(feats)
 
-print(sentimentSeparator('CG กากมากเลย'))
+print(sentimentSeparator('หนังไม่ดี แย่มากๆ'))

@@ -23,6 +23,7 @@ documentDirNamePos = dirName+'pantip_data_tmp\\pos\\'
 documentDirNameNeg = dirName+'pantip_data_tmp\\neg\\'
 
 documents = []
+filenames = []
 featureWord = []
 general_data = "general_data\\data.json"
 adjective_data = "adjective_list.json"
@@ -37,19 +38,27 @@ save_featureword.close()
 
 for fileName in os.listdir(documentDirNamePos):
     data = json.loads(open(documentDirNamePos + fileName, encoding="utf8").read())
-    documents.append((data["text"],"pos"))
+    documents.append((data["text"],"pos",fileName))
+    filenames.append(fileName)
 
 for fileName in os.listdir(documentDirNameNeg):
     data = json.loads(open(documentDirNameNeg + fileName, encoding="utf8").read())
-    documents.append((data["text"],"neg"))
+    documents.append((data["text"],"neg",fileName))
+    filenames.append(fileName)
 
 featureSize = len(documents)
 print(featureSize)
 
-def find_features(document):
+def find_features(document,fileName):
+    #we add fileName because detected no-keyword file
     words = word_tokenize(document,engine="newmm")
     words = [x for x in words if x != ""]
     willRemoveList = []
+    #5-grams
+    for i in range(0, len(words) - 4):
+        if (words[i] + words[i + 1] + words[i + 2] + words[i + 3] + words[i + 4] in featureWord):
+            words.append(words[i] + words[i + 1] + words[i + 2] + words[i + 3] + words[i + 4])
+            willRemoveList.extend([words[i], words[i + 1], words[i + 2], words[i + 3], words[i + 4]])
     # 4-grams
     for i in range(0, len(words) - 3):
         if (words[i] + words[i + 1] + words[i + 2] + words[i + 3] in featureWord):
@@ -74,10 +83,12 @@ def find_features(document):
         if(w in words):
             count+=1
         features[w] = (w in words)
-    print(count)
+    if(count == 0):
+        print(fileName)
+    # print(count)
     return features
 
-featuresets = [(find_features(comment), category) for (comment, category) in documents]
+featuresets = [(find_features(comment,fileName), category) for (comment, category,fileName) in documents]
 random.shuffle(featuresets)
 
 save_featuresets = open("pickled_polarity/FeatureSet.pickle","wb")
