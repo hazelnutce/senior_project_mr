@@ -35,8 +35,16 @@ class VoteClassifier(ClassifierI):
 
 def find_features(document):
     words = word_tokenize(document,engine="newmm")
+    words = [x for x in words if x != ""]
+    print(words)
     features = {}
     willRemoveList = []
+    # 5-grams
+    for i in range(0, len(words) - 4):
+        if (words[i] + words[i + 1] + words[i + 2] + words[i + 3] + words[i + 4] in featureWord):
+            words.append(words[i] + words[i + 1] + words[i + 2] + words[i + 3] + words[i + 4])
+            willRemoveList.extend([words[i], words[i + 1], words[i + 2], words[i + 3], words[i + 4]])
+
     # 4-grams
     for i in range(0, len(words) - 3):
         if (words[i] + words[i + 1] + words[i + 2] + words[i + 3] in featureWord):
@@ -55,12 +63,14 @@ def find_features(document):
 
     words = [x for x in words if x not in willRemoveList]
     count = 0
+
     for w in featureWord:
         if(w in words):
+            print(w)
             count += 1
         features[w] = (w in words)
-    print(count)
-    print(words)
+    # print(count)
+    # print(words)
     return features
 
 featuresets_f = open("pickled_polarity/FeatureSet.pickle", "rb")
@@ -106,8 +116,8 @@ voted_classifier = VoteClassifier(
                                   NuSVC_classifier,
                                   SGDC_classifier)
 
-def sentiment(text):
+def sentimentSeparator(text):
     feats = find_features(text)
     return voted_classifier.classify(feats),voted_classifier.confidence(feats)
 
-print(sentiment('ผมแนะนำว่าอย่าไปดูเลยครับพากย์ไทย ดูซาวแทรคดีกว่า'))
+print(sentimentSeparator('หนังไม่ดี แย่มากๆ'))
