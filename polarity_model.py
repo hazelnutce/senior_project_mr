@@ -34,9 +34,9 @@ class VoteClassifier(ClassifierI):
         return conf
 
 def find_features(document):
-    words = word_tokenize(document,engine="newmm")
+    words = word_tokenize(document,engine="mm")
     words = [x for x in words if x != ""]
-    print(words)
+
     features = {}
     willRemoveList = []
     # 5-grams
@@ -62,11 +62,15 @@ def find_features(document):
             willRemoveList.extend([words[i], words[i + 1]])
 
     words = [x for x in words if x not in willRemoveList]
+    # print(words)
     count = 0
+    for i in words:
+        if "มาก" in i:
+            words.append(i.replace("มาก",""))
 
     for w in featureWord:
         if(w in words):
-            print(w)
+            # print(w)
             count += 1
         features[w] = (w in words)
     # print(count)
@@ -120,4 +124,4 @@ def sentimentSeparator(text):
     feats = find_features(text)
     return voted_classifier.classify(feats),voted_classifier.confidence(feats)
 
-print(sentimentSeparator('หนังไม่ดี แย่มากๆ'))
+print(sentimentSeparator('Furious 7 ห่วยแตก'))
