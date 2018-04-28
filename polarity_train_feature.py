@@ -77,6 +77,9 @@ def find_features(document,fileName):
 
     words = [x for x in words if x not in willRemoveList]
     count = 0
+    for i in words:
+        if "มาก" in i:
+            words.append(i.replace("มาก",""))
     features = {}
     #return features if document is have only thai word
     for w in featureWord:

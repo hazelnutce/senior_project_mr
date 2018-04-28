@@ -39,7 +39,7 @@ def aspectSeparator(text):
             if(word == aspect_word):
                 aspect.append('actor')
                 break;
-    return set(aspect)
+    return list(set(aspect))
 
 # print(aspectSeparator("หนังสนุกมากๆครับ ผมโคตรชอบเลย"))
 # print(aspectSeparator("ภาพยนตร์เรื่องนี้น่าไปดูมาก แนะนำเลยครับ"))
