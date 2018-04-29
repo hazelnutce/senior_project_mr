@@ -7,6 +7,7 @@ import aspect_model
 import polarity_model
 import model.sentence
 import model.aspect
+import model.sentiment
 
 cred = credentials.Certificate('test_area_file/credentialAuth.json')
 default_app = firebase_admin.initialize_app(cred,{
@@ -42,7 +43,9 @@ def calculateNewScore(data,root):
                 sentimentString = ""
                 for sentence in sentence_list:
                     sentenceString += (sentence+"/")
-                    sentimentAns, probAns = polarity_model.sentimentSeparator(sentence)
+                    sentimentAns,probAns,count = polarity_model.sentimentSeparator(sentence)
+                    if(count == 0):
+                        sentimentAns = model.sentiment.sentiment_predict(sentence)
                     aspectAns = model.aspect.aspect_predict(sentence)
                     aspectString += (aspectAns+"/")
                     sentimentString += (sentimentAns+"/")

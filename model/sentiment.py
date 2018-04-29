@@ -6,11 +6,17 @@ from collections import Counter, OrderedDict
 import pickle
 import numpy as np
 
-open_file = open('pickle/sentiment_keyword.pickle','rb')
+import os
+cwd = os.getcwd()
+
+if("\\model" in cwd):
+    cwd = cwd.replace("\\model","")
+
+open_file = open(cwd+'/model/pickle/sentiment_keyword.pickle','rb')
 sentiment_kw = pickle.load(open_file)
 open_file.close()
 
-open_file = open('pickle/sentiment_classifier.pickle','rb')
+open_file = open(cwd+'/model/pickle/sentiment_classifier.pickle','rb')
 sentiment_classifier = pickle.load(open_file)
 open_file.close()
 

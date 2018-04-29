@@ -33,9 +33,32 @@ class VoteClassifier(ClassifierI):
         conf = choice_votes / len(votes)
         return conf
 
+def removeProblemPrefix(words):
+    word_new = []
+    for i in words:
+        if "ไม่ได้" in i:
+            i = "ไม่"
+            word_new.append(i)
+        else:
+            word_new.append(i)
+    return word_new
+
+def removeProblemSuffix(words):
+    word_new = []
+    for i in words:
+        if "มาก" in i:
+            i = i.replace("มาก","")
+            word_new.append(i)
+        else:
+            word_new.append(i)
+    return word_new
+
 def find_features(document):
     words = word_tokenize(document,engine="mm")
     words = [x for x in words if x != ""]
+
+    words = removeProblemPrefix(words)
+    words = removeProblemSuffix(words)
 
     features = {}
     willRemoveList = []
@@ -62,11 +85,8 @@ def find_features(document):
             willRemoveList.extend([words[i], words[i + 1]])
 
     words = [x for x in words if x not in willRemoveList]
-    # print(words)
+    print(words)
     count = 0
-    for i in words:
-        if "มาก" in i:
-            words.append(i.replace("มาก",""))
 
     for w in featureWord:
         if(w in words):
@@ -75,7 +95,7 @@ def find_features(document):
         features[w] = (w in words)
     # print(count)
     # print(words)
-    return features
+    return features,count
 
 featuresets_f = open("pickled_polarity/FeatureSet.pickle", "rb")
 featuresets = pickle.load(featuresets_f)
@@ -121,7 +141,7 @@ voted_classifier = VoteClassifier(
                                   SGDC_classifier)
 
 def sentimentSeparator(text):
-    feats = find_features(text)
-    return voted_classifier.classify(feats),voted_classifier.confidence(feats)
+    feats,count = find_features(text)
+    return voted_classifier.classify(feats),voted_classifier.confidence(feats),count
 
-print(sentimentSeparator('Furious 7 ห่วยแตก'))
+print(sentimentSeparator('โดยรวมก็ไม่ได้แย่มากนะ'))
